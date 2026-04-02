@@ -10,23 +10,9 @@ private:
 
 public:
     Population(int p, int b, int d) {
-        if (p < 1) {
-            population = 1;
-        } else {
-            population = p;
-        }
-
-        if (b < 0) {
-            births = 0;
-        } else {
+            population = p;       
             births = b;
-        }
-
-        if (d < 0) {
-            deaths = 0;
-        } else {
             deaths = d;
-        }
     }
 
     double getBirthRate() {
@@ -40,8 +26,25 @@ public:
 
 int main() {
     int p, b, d;
-    cout << "Enter population, births, and deaths: ";
-    cin >> p >> b >> d;
+    cout << "Enter population: ";
+    cin >> p ;
+    while (p < 1) {
+        cout << "Invalid population. Population must be bigger than 1: ";
+        cin >> p;
+    }
+    cout << "Enter births: ";
+    cin >> b;
+    while (b < 0) {
+        cout << "Invalid births. Please enter a positive value: ";
+        cin >> b;
+    }
+    cout << "Enter deaths: ";
+    cin >> d;
+    while (d < 0) {
+        cout << "Invalid deaths. Please enter a positive value: ";
+        cin >> d;
+    }
+
 
     Population pop(p, b, d);
 

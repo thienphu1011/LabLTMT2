@@ -15,19 +15,9 @@ private:
 
 public:
     Date(int m, int d, int y) {
-        if (m < 1 || m > 12) {
-            month = 1;
-        } else {
             month = m;
-        }
-
-        if (d < 1 || d > 31) {
-            day = 1;
-        } else {
             day = d;
-        }
-
-        year = y;
+            year = y;
     }
 
     void printFormat1() {
@@ -45,11 +35,42 @@ public:
 
 int main() {
     int m, d, y;
-    cout << "Enter month, day, year: ";
-    cin >> m >> d >> y;
-
+    
+    cout << "Enter year: ";
+    cin >> y;
+    while (y < 1) {
+        cout << "Invalid year. Please enter a positive value: ";
+        cin >> y;
+    }
+    
+    cout << "Enter month: ";
+    cin >> m;
+    while (m < 1 || m > 12) {
+        cout << "Invalid month. Please enter a value between 1 and 12: ";
+        cin >> m;
+    }
+    int maxDays = 31; 
+    
+    if (m == 2) {
+        bool isLeapYear = (y % 4 == 0 && y % 100 != 0) || (y % 400 == 0);
+        if (isLeapYear) {
+            maxDays = 29;
+        } else {
+            maxDays = 28;
+        }
+    } else if (m == 4 || m == 6 || m == 9 || m == 11) {
+        maxDays = 30;
+    }
+    cout << "Enter day: ";
+    cin >> d;
+    
+    while (d < 1 || d > maxDays) {
+        cout << "Invalid day. Month " << m << " in year " << y 
+             << " has a maximum of " << maxDays << " days. Please enter again: ";
+        cin >> d;
+    }
+    
     Date myDate(m, d, y);
-
     cout << "\nOutput:\n";
     myDate.printFormat1();
     myDate.printFormat2();
