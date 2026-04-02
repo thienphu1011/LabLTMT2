@@ -8,32 +8,26 @@ class Die {
     int value; 
 
     public:
-    Die(int = 6); 
-    void roll();
-    int getSides(); 
-    int getValue(); 
-
-};
-
-Die::Die(int numSides) {
+    Die(int numSides) {
     unsigned seed = time(0);
     srand(seed);
     sides = numSides;
     roll();
-}
+    }
 
-void Die::roll() {
+    void roll() {
     const int MIN_VALUE = 1;
     value = (rand() % (sides - MIN_VALUE + 1)) + MIN_VALUE;
-}
+    }
 
-int Die::getSides() {
+    int getSides() {
     return sides;
-}
+    }
 
-int Die::getValue() {
+    int getValue() {
     return value;
-}
+    }
+};
 
 int main() {
     Die myDie(6);
