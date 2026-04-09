@@ -69,17 +69,30 @@ public:
 };
 
 int main() {
-    ShiftSupervisor supervisor("Phu", 47899, "Manufacturing", "Shift Supervisor", 75000.0, 8500.0);
+    ShiftSupervisor supervisors[] = {
+        ShiftSupervisor("Phu", 47899, "Manufacturing", "Shift Supervisor", 75000.0, 8500.0),
+        ShiftSupervisor("John", 12345, "Sales", "Shift Supervisor", 65000.0, 5000.0),
+        ShiftSupervisor("Anna", 81774, "Engineering", "Shift Supervisor", 82000.0, 9500.0)
+    };
 
-    cout << "Shift Supervisor Details:\n";
-    cout << "Name: " << supervisor.getName() << "\n";
-    cout << "ID Number: " << supervisor.getIdNumber() << "\n";
-    cout << "Department: " << supervisor.getDepartment() << "\n";
-    cout << "Position: " << supervisor.getPosition() << "\n";
-    
+    cout << "Shift Supervisor Details:\n\n";
+    cout << left << setw(20) << "Name" 
+         << setw(12) << "ID Number" 
+         << setw(20) << "Department" 
+         << setw(20) << "Position" 
+         << setw(16) << "Annual Salary" 
+         << "Annual Bonus" << "\n";
+    cout << string(98, '-') << "\n";
+
     cout << fixed << setprecision(2);
-    cout << "Annual Salary: $" << supervisor.getAnnualSalary() << "\n";
-    cout << "Annual Bonus: $" << supervisor.getAnnualBonus() << "\n";
+    for (const ShiftSupervisor& s : supervisors) {
+        cout << left << setw(20) << s.getName()
+             << setw(12) << s.getIdNumber()
+             << setw(20) << s.getDepartment()
+             << setw(20) << s.getPosition();
+        cout << '$' << setw(15) << s.getAnnualSalary();
+        cout << '$' << s.getAnnualBonus() << "\n";
+    }
 
     return 0;
 }
