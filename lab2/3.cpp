@@ -1,62 +1,85 @@
 #include <iostream>
+#include <string>
 #include <iomanip>
 
 using namespace std;
 
-class DivSales {
+class Employee {
 private:
-    double sales[4];
-    static double totalCorporateSales;
+    string name;
+    int idNumber;
+    string department;
+    string position;
 
 public:
-    DivSales() {
-        for (int i = 0; i < 4; i++) {
-            sales[i] = 0.0;
-        }
+    Employee(string n, int id, string dept, string pos) {
+        name = n;
+        idNumber = id;
+        department = dept;
+        position = pos;
     }
 
-    void setSales(double q1, double q2, double q3, double q4) {
-        sales[0] = q1;
-        sales[1] = q2;
-        sales[2] = q3;
-        sales[3] = q4;
-        totalCorporateSales += (q1 + q2 + q3 + q4);
+    Employee(string n, int id) {
+        name = n;
+        idNumber = id;
+        department = "";
+        position = "";
     }
 
-    double getSales(int quarter) const {
-        if (quarter >= 0 && quarter <= 3) {
-            return sales[quarter];
-        }
-        return 0.0;
+    Employee() {
+        name = "";
+        idNumber = 0;
+        department = "";
+        position = "";
     }
 
-    static double getTotalCorporateSales() {
-        return totalCorporateSales;
-    }
+    void setName(string n) { name = n; }
+    void setIdNumber(int id) { idNumber = id; }
+    void setDepartment(string dept) { department = dept; }
+    void setPosition(string pos) { position = pos; }
+
+    string getName() const { return name; }
+    int getIdNumber() const { return idNumber; }
+    string getDepartment() const { return department; }
+    string getPosition() const { return position; }
 };
 
-double DivSales::totalCorporateSales = 0.0;
+class ShiftSupervisor : public Employee {
+private:
+    double annualSalary;
+    double annualBonus;
+
+public:
+    ShiftSupervisor() : Employee() {
+        annualSalary = 0.0;
+        annualBonus = 0.0;
+    }
+
+    ShiftSupervisor(string n, int id, string dept, string pos, double salary, double bonus) 
+        : Employee(n, id, dept, pos) {
+        annualSalary = salary;
+        annualBonus = bonus;
+    }
+
+    void setAnnualSalary(double salary) { annualSalary = salary; }
+    void setAnnualBonus(double bonus) { annualBonus = bonus; }
+
+    double getAnnualSalary() const { return annualSalary; }
+    double getAnnualBonus() const { return annualBonus; }
+};
 
 int main() {
-    DivSales divisions[6];
-    double q1, q2, q3, q4;
+    ShiftSupervisor supervisor("Phu", 47899, "Manufacturing", "Shift Supervisor", 75000.0, 8500.0);
 
-    for (int i = 0; i < 6; i++) {
-        do {
-            cin >> q1 >> q2 >> q3 >> q4;
-        } while (q1 < 0 || q2 < 0 || q3 < 0 || q4 < 0);
-        
-        divisions[i].setSales(q1, q2, q3, q4);
-    }
-
-    for (int i = 0; i < 6; i++) {
-        for (int j = 0; j < 4; j++) {
-            cout << fixed << setprecision(2) << divisions[i].getSales(j) << " ";
-        }
-        cout << "\n";
-    }
-
-    cout << fixed << setprecision(2) << DivSales::getTotalCorporateSales() << "\n";
+    cout << "Shift Supervisor Details:\n";
+    cout << "Name: " << supervisor.getName() << "\n";
+    cout << "ID Number: " << supervisor.getIdNumber() << "\n";
+    cout << "Department: " << supervisor.getDepartment() << "\n";
+    cout << "Position: " << supervisor.getPosition() << "\n";
+    
+    cout << fixed << setprecision(2);
+    cout << "Annual Salary: $" << supervisor.getAnnualSalary() << "\n";
+    cout << "Annual Bonus: $" << supervisor.getAnnualBonus() << "\n";
 
     return 0;
 }
