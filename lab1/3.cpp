@@ -64,9 +64,10 @@ int main() {
 
     cout << "Enter number of years: ";
     cin >> y;
-    while (y < 0) {
-        cout << "Invalid number of years. Please enter a positive value: ";
+    while (y < 0 || y == 0) {
+        cout << "Invalid number of years. Please enter a positive value and year cannot be zero: ";
         cin >> y;
+        
     }
 
     myMortgage.setYears(y);

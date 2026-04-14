@@ -1,38 +1,33 @@
 #include <iostream>
 #include <string>
-
 using namespace std;
 
 class Date {
 private:
-    int month;
-    int day;
-    int year;
-    static const int daysPerMonth[13];
+    int day, month, year;
 
-    bool isLeapYear(int y) const {
+    bool isLeap(int y) const {
         return (y % 4 == 0 && y % 100 != 0) || (y % 400 == 0);
     }
 
     int getDaysInMonth(int m, int y) const {
-        if (m == 2 && isLeapYear(y)) return 29;
-        return daysPerMonth[m];
+        if (m == 2) return isLeap(y) ? 29 : 28;
+        if (m == 4 || m == 6 || m == 9 || m == 11) return 30;
+        return 31;
     }
 
-    int toDays() const {
-        int totalDays = day;
-        for (int y = 1; y < year; ++y) {
-            totalDays += isLeapYear(y) ? 366 : 365;
-        }
-        for (int m = 1; m < month; ++m) {
-            totalDays += getDaysInMonth(m, year);
-        }
-        return totalDays;
+    string monthName(int m) const {
+        string months[] = { "January","February","March","April","May","June",
+                            "July","August","September","October","November","December" };
+        return months[m - 1];
     }
 
 public:
-    Date(int m = 1, int d = 1, int y = 1900) : month(m), day(d), year(y) {}
+    Date(int d = 1, int m = 1, int y = 2000) {
+        day = d; month = m; year = y;
+    }
 
+    
     Date& operator++() {
         day++;
         if (day > getDaysInMonth(month, year)) {
@@ -46,12 +41,14 @@ public:
         return *this;
     }
 
+    
     Date operator++(int) {
         Date temp = *this;
         ++(*this);
         return temp;
     }
 
+    
     Date& operator--() {
         day--;
         if (day < 1) {
@@ -65,60 +62,107 @@ public:
         return *this;
     }
 
+    
     Date operator--(int) {
         Date temp = *this;
         --(*this);
         return temp;
     }
 
-    int operator-(const Date& right) const {
-        return this->toDays() - right.toDays();
-    }
+    
+    int dayOfYear() const {
+        int days[] = {0,31,28,31,30,31,30,31,31,30,31,30,31};
+        int total = day;
 
-    friend ostream& operator<<(ostream& strm, const Date& obj) {
-        string months[] = { "", "January", "February", "March", "April", "May", "June", 
-                            "July", "August", "September", "October", "November", "December" };
-        strm << months[obj.month] << " " << obj.day << ", " << obj.year;
-        return strm;
-    }
-
-    friend istream& operator>>(istream& strm, Date& obj) {
-        int m, d, y;
-        char slash1, slash2;
-        strm >> m >> slash1 >> d >> slash2 >> y;
-
-        if (m >= 1 && m <= 12) {
-            int maxDays = obj.daysPerMonth[m];
-            if (m == 2 && obj.isLeapYear(y)) {
-                maxDays = 29;
-            }
-            if (d >= 1 && d <= maxDays) {
-                obj.month = m;
-                obj.day = d;
-                obj.year = y;
-            }
+        for (int i = 1; i < month; i++) {
+            total += days[i];
+            if (i == 2 && isLeap(year)) total++;
         }
-        return strm;
+        return total;
+    }
+
+    int operator-(const Date& other) const {
+        if (year == other.year)
+            return dayOfYear() - other.dayOfYear();
+
+        int days = 0;
+
+        int daysOtherYear = other.isLeap(other.year) ? 366 : 365;
+        days += daysOtherYear - other.dayOfYear();
+
+        for (int y = other.year + 1; y < year; y++) {
+            days += isLeap(y) ? 366 : 365;
+        }
+
+        // phần đầu năm this
+        days += dayOfYear();
+
+        return days;
+    }
+
+    
+    friend ostream& operator<<(ostream& out, const Date& d) {
+        out << d.monthName(d.month) << " " << d.day << ", " << d.year;
+        return out;
+    }
+
+    
+    friend istream& operator>>(istream& in, Date& d) {
+    int m, dy, yr;
+
+    
+    do {
+        cout << "Enter year (> 0): ";
+        in >> yr;
+    } while (yr <= 0);
+
+    
+    do {
+        cout << "Enter month (1-12): ";
+        in >> m;
+    } while (m < 1 || m > 12);
+
+    int maxDays;
+    if (m == 2)
+        maxDays = ((yr % 4 == 0 && yr % 100 != 0) || (yr % 400 == 0)) ? 29 : 28;
+    else if (m == 4 || m == 6 || m == 9 || m == 11)
+        maxDays = 30;
+    else
+        maxDays = 31;
+
+    
+    do {
+        cout << "Enter day (1-" << maxDays << "): ";
+        in >> dy;
+    } while (dy < 1 || dy > maxDays);
+
+    d.day = dy;
+    d.month = m;
+    d.year = yr;
+
+    return in;
     }
 };
 
-const int Date::daysPerMonth[13] = { 0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
-
 int main() {
-    Date d1(4, 10, 2014);
-    Date d2(4, 18, 2014);
-    
-    cout << d2 - d1 << "\n";
-    
-    Date d3;
-    cin >> d3;
-    cout << d3 << "\n";
-    
-    d3++;
-    cout << d3 << "\n";
-    
-    --d3;
-    cout << d3 << "\n";
+    Date d1, d2;
+
+    cout << "Enter Date 1:\n";
+    cin >> d1;
+
+    cout << "Enter Date 2:\n";
+    cin >> d2;
+
+    cout << "\nDate 1: " << d1 << endl;
+    cout << "Date 2: " << d2 << endl;
+
+    cout << "Days between: " << (d1 - d2) << endl;
+
+    cout << "\nPrefix ++: " << ++d1 << endl;
+    cout << "Postfix ++: " << d1++ << " -> " << d1 << endl;
+
+    cout << "\nPrefix --: " << --d2 << endl;
+    cout << "Postfix --: " << d2-- << " -> " << d2 << endl;
 
     return 0;
 }

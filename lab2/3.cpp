@@ -1,98 +1,79 @@
 #include <iostream>
-#include <string>
 #include <iomanip>
-
 using namespace std;
-
-class Employee {
-private:
-    string name;
-    int idNumber;
-    string department;
-    string position;
-
-public:
-    Employee(string n, int id, string dept, string pos) {
-        name = n;
-        idNumber = id;
-        department = dept;
-        position = pos;
-    }
-
-    Employee(string n, int id) {
-        name = n;
-        idNumber = id;
-        department = "";
-        position = "";
-    }
-
-    Employee() {
-        name = "";
-        idNumber = 0;
-        department = "";
-        position = "";
-    }
-
-    void setName(string n) { name = n; }
-    void setIdNumber(int id) { idNumber = id; }
-    void setDepartment(string dept) { department = dept; }
-    void setPosition(string pos) { position = pos; }
-
-    string getName() const { return name; }
-    int getIdNumber() const { return idNumber; }
-    string getDepartment() const { return department; }
-    string getPosition() const { return position; }
+class DivSales
+{
+    private:
+       double quarterlySales[4];
+       static double totalCorporateSales;
+    public:
+       void setSales(double q1, double q2, double q3, double q4)
+        {
+           if (q1 < 0 || q2 < 0 || q3 < 0 || q4 < 0)
+            {
+               cout << "Error: Sales figures must be positive." << endl;
+               exit(EXIT_FAILURE);
+           }
+           quarterlySales[0] = q1;
+           quarterlySales[1] = q2;
+           quarterlySales[2] = q3;
+           quarterlySales[3] = q4;
+           totalCorporateSales += q1 + q2 + q3 + q4;
+       }
+       double getQuarterlySale(int quarter) const
+        {
+           if (quarter < 0 || quarter > 3)
+            {
+               cout << "Error: Invalid quarter index." << endl;
+               exit(EXIT_FAILURE);
+           }
+           return quarterlySales[quarter];
+       }
+       static double getTotalCorporateSales()  
+        {
+           return totalCorporateSales;
+       }
 };
-
-class ShiftSupervisor : public Employee {
-private:
-    double annualSalary;
-    double annualBonus;
-
-public:
-    ShiftSupervisor() : Employee() {
-        annualSalary = 0.0;
-        annualBonus = 0.0;
-    }
-
-    ShiftSupervisor(string n, int id, string dept, string pos, double salary, double bonus) 
-        : Employee(n, id, dept, pos) {
-        annualSalary = salary;
-        annualBonus = bonus;
-    }
-
-    void setAnnualSalary(double salary) { annualSalary = salary; }
-    void setAnnualBonus(double bonus) { annualBonus = bonus; }
-
-    double getAnnualSalary() const { return annualSalary; }
-    double getAnnualBonus() const { return annualBonus; }
-};
-
-int main() {
-    ShiftSupervisor supervisors[] = {
-        ShiftSupervisor("Phu", 47899, "Manufacturing", "Shift Supervisor", 75000.0, 8500.0),
-        ShiftSupervisor("John", 12345, "Sales", "Shift Supervisor", 65000.0, 5000.0),
-        ShiftSupervisor("Anna", 81774, "Engineering", "Shift Supervisor", 82000.0, 9500.0)
-    };
-
-    cout << "Shift Supervisor Details:\n\n";
-    cout << left << setw(20) << "Name" 
-         << setw(12) << "ID Number" 
-         << setw(20) << "Department" 
-         << setw(20) << "Position" 
-         << setw(16) << "Annual Salary" 
-         << "Annual Bonus" << "\n";
-    cout << string(98, '-') << "\n";
-
-    cout << fixed << setprecision(2);
-    for (const ShiftSupervisor& s : supervisors) {
-        cout << left << setw(20) << s.getName()
-             << setw(12) << s.getIdNumber()
-             << setw(20) << s.getDepartment()
-             << setw(20) << s.getPosition();
-        cout << '$' << setw(15) << s.getAnnualSalary();
-        cout << '$' << s.getAnnualBonus() << "\n";
-    }
-
-    return 0;
+    double DivSales::totalCorporateSales = 0;
+int main()
+{
+   const int DIVISIONS = 6;
+   DivSales divisions[DIVISIONS];
+   double q[4];
+   for (int i = 0; i < DIVISIONS; i++)
+    {
+       cout << "Enter sales for Division " << (i + 1) << ":\n";
+       for (int j = 0; j < 4; j++)
+        {
+           do
+            {
+               cout << "  Quarter " << (j + 1) << ": $";
+               cin >> q[j];
+               if (q[j] < 0)
+                {
+                   cout << "    Please enter a positive value.\n";
+               }
+           } while (q[j] < 0);
+       }
+       divisions[i].setSales(q[0], q[1], q[2], q[3]);
+       cout << endl;
+   }
+   cout << fixed << setprecision(2);
+   cout << "\nDivision Sales Report\n";
+   cout << "----------------------\n";
+   for (int i = 0; i < DIVISIONS; i++)
+    {
+       cout << "Division " << (i + 1) << ":\n";
+       for (int j = 0; j < 4; j++)
+        {
+           cout << "  Quarter " << (j + 1) << ": $" << divisions[i].getQuarterlySale(j) << endl;
+       }
+       cout << endl;
+   }
+   cout << "Total Corporate Sales for the Year: $"
+       << DivSales::getTotalCorporateSales() << endl;
+return 0;
 }
+
+
+
