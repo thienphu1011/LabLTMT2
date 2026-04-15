@@ -1,51 +1,50 @@
-#include <iostream>
-#include <vector>
+#include <iostream> 
+#include <vector> 
+#include <algorithm>  
 
-using namespace std;
+using namespace std; 
+ 
 
-void mySwap(int& a, int& b) {
-    int temp = a;
-    a = b;
-    b = temp;
-}
+int main() { 
 
-void partitionVector(vector<int>& arr, int low, int high, int& pivotIndex) {
-    int pivot = arr[high];
-    int i = (low - 1);
-    for (int j = low; j <= high - 1; j++) {
-        if (arr[j] < pivot) {
-            i++;
-            mySwap(arr[i], arr[j]);
-        }
-    }
-    mySwap(arr[i + 1], arr[high]);
-    pivotIndex = i + 1;
-}
+    int N; 
+    cout << "Enter the number of elements (N): "; 
+    cin >> N; 
+
+ 
+
+    vector<int> v(N); 
+
+    cout << "Enter " << N << " integers:" << endl; 
+    for (int i = 0; i < N; i++) { 
+        cin >> v[i]; 
+
+    } 
+
+ 
+
+    int orderChoice; 
+    cout << "Sort in (1) Ascending or (2) Descending order? Enter 1 or 2: "; 
+    cin >> orderChoice; 
 
 
-void quickSortVector(vector<int>& arr, int low, int high) {
-    if (low < high) {
-        int pi;
-        partitionVector(arr, low, high, pi);
-        quickSortVector(arr, low, pi - 1);
-        quickSortVector(arr, pi + 1, high);
-    }
-}
+    if (orderChoice == 1) {   
+        sort(v.begin(), v.end()); 
 
-int main() {
-    int n;
-    if (!(cin >> n)) return 0;
-    
-    vector<int> v(n);
-    for (int i = 0; i < n; i++) {
-        cin >> v[i];
-    }
-    
-    quickSortVector(v, 0, n - 1);
-    for (int i = 0; i < n; i++) {
-        cout << v[i] << " ";
-    }
-    cout << endl;
-    
-    return 0;
-}
+    } else { 
+
+        sort(v.begin(), v.end(), greater<int>()); 
+
+    } 
+
+ 
+    cout << "Sorted vector:" << endl; 
+    for (int i = 0; i < N; i++) { 
+        cout << v[i] << " "; 
+
+    } 
+    cout << endl; 
+
+    return 0; 
+
+} 
